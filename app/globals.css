@@ -85,3 +85,48 @@ button { @apply bg-neutral-100 text-neutral-900 font-medium px-3 py-1.5 rounded-
 
 .meter { @apply h-1.5 rounded overflow-hidden mt-2; background: var(--meter-track); }
 .meter-fill { height: 100%; background: var(--series-1); }
+
+/* ── Installed app ──────────────────────────────────────────────────────
+   When launched from the home screen there is no browser chrome, so the
+   layout extends under the notch and the home indicator. Pad for both. */
+body { padding-top: env(safe-area-inset-top); }
+.tabbar { display: none; }
+.sm-only-total { display: none; }
+
+/* ── Tablet (641–1024px) ────────────────────────────────────────────────
+   Header nav still fits. Charts stay side by side; tiles stay four across
+   but with tighter type so numbers do not wrap. */
+@media (max-width: 1024px) {
+  .tile .v { @apply text-lg; }
+  th, td { @apply px-2.5; }
+}
+
+/* ── Phone (≤640px) ─────────────────────────────────────────────────────
+   Header links give way to a bottom tab bar, the way a native app does.
+   Secondary table columns hide so the important ones fit without sideways
+   scrolling; the CSV export and the chart table views still carry every
+   value. Tap targets are at least 44px. */
+@media (max-width: 640px) {
+  .nav { display: none; }
+  .tabbar {
+    @apply fixed bottom-0 inset-x-0 z-20 flex justify-around border-t border-neutral-800;
+    background: rgba(10, 10, 10, 0.92);
+    backdrop-filter: blur(12px);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .tabbar a { @apply flex flex-col items-center gap-0.5 flex-1 py-2 text-[11px] text-neutral-500; min-height: 52px; }
+  .tabbar a.active { @apply text-neutral-100; }
+  .tabbar a.active svg { color: var(--series-1); }
+  /* Room for the tab bar so the last table row is never hidden under it. */
+  main { @apply px-3 py-4; padding-bottom: calc(72px + env(safe-area-inset-bottom)); }
+  .sm-hide { display: none; }
+  .sm-only-total { display: table-cell; }
+  .tile .v { @apply text-lg; }
+  th, td { @apply px-2 py-2.5 text-xs; }
+  .hbar-row { grid-template-columns: minmax(56px, 96px) 1fr minmax(72px, auto); gap: 0.5rem; }
+  .hbar-label, .hbar-value { @apply text-[11px]; }
+  .chart-tip { @apply text-[11px] px-2 py-1; }
+  .legend { @apply gap-x-3; }
+  form.card { @apply grid-cols-1; }
+  input, select, button { @apply py-2.5 text-base; } /* 16px stops iOS zooming the page on focus */
+}

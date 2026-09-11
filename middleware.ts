@@ -21,4 +21,9 @@ export async function middleware(req: NextRequest) {
   url.search = pathname === "/" ? "" : `?next=${encodeURIComponent(pathname)}`;
   return NextResponse.redirect(url);
 }
-export const config = { matcher: ["/((?!_vercel|_next/static|_next/image|favicon.ico).*)"] };
+// The manifest and icons are fetched by the browser without a session when
+// the app is installed to a home screen, so they stay public. Everything
+// else needs a login.
+export const config = {
+  matcher: ["/((?!_vercel|_next/static|_next/image|favicon.ico|manifest.webmanifest|icon.svg|icon-192.png|icon-512.png|apple-icon.png).*)"],
+};

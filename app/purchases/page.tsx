@@ -73,11 +73,11 @@ export default async function Purchases() {
       </form>
       {dbError && <p className="err text-xs mb-2">Database: {dbError}</p>}
       <h2>History</h2>
-      <div className="tablewrap"><table><thead><tr><th>Date</th><th>Asset</th><th className="num">Qty</th><th className="num">USD total</th><th className="num">Fees</th><th className="num">Fee %</th><th>Rail</th><th>Notes</th></tr></thead>
+      <div className="tablewrap"><table><thead><tr><th>Date</th><th>Asset</th><th className="num">Qty</th><th className="num">USD total</th><th className="num sm-hide">Fees</th><th className="num sm-hide">Fee %</th><th>Rail</th><th className="sm-hide">Notes</th></tr></thead>
       <tbody>{rows.map((r) => (
         <tr key={r.id}><td className="muted">{r.date}</td><td className="text-neutral-100">{r.asset}</td><td className="num">{fmtQty(r.quantity)}</td><td className="num">{fmtUsd(Number(r.usd_total))}</td>
-          <td className="num muted">{fmtUsd(Number(r.fees))}</td><td className="num muted">{Number(r.usd_total) ? (Number(r.fees) / Number(r.usd_total) * 100).toFixed(2) + "%" : "—"}</td>
-          <td>{r.rail}</td><td className="muted">{r.notes}</td></tr>
+          <td className="num muted sm-hide">{fmtUsd(Number(r.fees))}</td><td className="num muted sm-hide">{Number(r.usd_total) ? (Number(r.fees) / Number(r.usd_total) * 100).toFixed(2) + "%" : "—"}</td>
+          <td>{r.rail}</td><td className="muted sm-hide">{r.notes}</td></tr>
       ))}</tbody></table>
       {!dbError && rows.length === 0 && <p className="muted p-4">No purchases logged yet. Add one above.</p>}</div>
     </>

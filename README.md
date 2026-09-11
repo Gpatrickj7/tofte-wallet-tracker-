@@ -31,6 +31,15 @@ Sign in at <http://localhost:3000> with `me` / `me`, then open <http://localhost
 
 Prefer containers? `docker compose up` gives you the app and a database together. See [Docker](#docker).
 
+## On your phone or tablet
+
+It installs like an app. Once it is deployed, open it in your phone's browser and:
+
+- **iPhone or iPad:** Share → **Add to Home Screen**.
+- **Android:** the browser menu → **Install app** (or **Add to Home screen**).
+
+It then opens full-screen with its own icon, no browser bar. On a phone the navigation moves to a bottom tab bar and tables show their most important columns; everything else is still in the table views under each chart and in the CSV exports. Tablets get the full layout.
+
 This is v1, released as-is under the MIT license.
 
 ## Contents

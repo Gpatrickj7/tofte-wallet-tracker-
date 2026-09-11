@@ -66,13 +66,13 @@ export default async function Mining() {
           <a href="/api/export/payouts" className="text-xs">Export CSV</a>
         </div>
       </div>
-      <div className="tablewrap"><table><thead><tr><th>Date (UTC)</th><th>Asset</th><th className="num">Qty</th><th className="num">Price @ receipt</th><th className="num">USD income</th><th>Source</th><th>Tx</th></tr></thead>
+      <div className="tablewrap"><table><thead><tr><th>Date (UTC)</th><th>Asset</th><th className="num">Qty</th><th className="num sm-hide">Price @ receipt</th><th className="num">USD income</th><th className="sm-hide">Source</th><th className="sm-hide">Tx</th></tr></thead>
       <tbody>{payouts.map((p) => (
         <tr key={p.id}><td className="muted">{fmtTs(p.ts)}</td><td>{p.asset}</td><td className="num">{fmtQty(fromBase(p.amount_base, p.decimals))}</td>
-          <td className="num muted">{p.usd_price == null ? <span className="err">{p.price_error ?? "pending"}</span> : fmtUsd(Number(p.usd_price))}</td>
+          <td className="num muted sm-hide">{p.usd_price == null ? <span className="err">{p.price_error ?? "pending"}</span> : fmtUsd(Number(p.usd_price))}</td>
           <td className="num text-neutral-100">{p.usd_value == null ? "—" : fmtUsd(Number(p.usd_value))}</td>
-          <td className="muted">{p.source ?? "—"}</td>
-          <td><a className="muted" href={`https://etc.blockscout.com/tx/${p.id}`}>{p.id.slice(0, 10)}…</a></td></tr>
+          <td className="muted sm-hide">{p.source ?? "—"}</td>
+          <td className="sm-hide"><a className="muted" href={`https://etc.blockscout.com/tx/${p.id}`}>{p.id.slice(0, 10)}…</a></td></tr>
       ))}</tbody></table>
       {!dbError && payouts.length === 0 && <p className="muted p-4">No payouts recorded yet.</p>}</div>
     </>

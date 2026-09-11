@@ -67,19 +67,19 @@ export default async function Holdings({ searchParams }: { searchParams: Promise
       </div>
 
       <h2>Positions</h2>
-      <div className="tablewrap"><table><thead><tr><th>Asset</th><th>Chain</th><th>Type</th><th className="num">Qty</th><th className="num">Price</th><th className="num">USD</th><th className="num">%</th></tr></thead>
+      <div className="tablewrap"><table><thead><tr><th>Asset</th><th>Chain</th><th className="sm-hide">Type</th><th className="num">Qty</th><th className="num sm-hide">Price</th><th className="num">USD</th><th className="num sm-hide">%</th></tr></thead>
       <tbody>{rows.map((r, i) => (
         <tr key={i}>
           <td><div className="text-neutral-100">{r.asset}</div>{r.note && <div className={(r.kind === "token" ? "err" : "muted") + " text-xs max-w-md"}>{r.note}</div>}{!r.note && r.kind === "token" && r.value == null && <div className="err text-xs max-w-md">no market price. If you never bought this, it is an unsolicited airdrop; treat as $0 and never interact with it.</div>}</td>
           <td className="muted">{r.chain}</td>
-          <td><span className={`badge badge-${r.kind}`}>{r.kind}</span></td>
+          <td className="sm-hide"><span className={`badge badge-${r.kind}`}>{r.kind}</span></td>
           <td className="num">{fmtQty(r.quantity)}</td>
-          <td className="num muted">{fmtUsd(r.price)}</td>
+          <td className="num muted sm-hide">{fmtUsd(r.price)}</td>
           <td className="num text-neutral-100">{r.value == null ? <span className="err">no price</span> : fmtUsd(r.value)}</td>
-          <td className="num muted">{r.value == null || !total || (r.kind === "token" && r.note) ? "—" : (r.value / total * 100).toFixed(1) + "%"}</td>
+          <td className="num muted sm-hide">{r.value == null || !total || (r.kind === "token" && r.note) ? "—" : (r.value / total * 100).toFixed(1) + "%"}</td>
         </tr>
       ))}</tbody>
-      <tfoot><tr><td colSpan={5}>Total</td><td className="num">{fmtUsd(total)}</td><td /></tr></tfoot></table></div>
+      <tfoot><tr><td colSpan={3} className="sm-hide">Total</td><td colSpan={2} className="sm-only-total">Total</td><td className="num">{fmtUsd(total)}</td><td className="sm-hide" /></tr></tfoot></table></div>
     </>
   );
 }
