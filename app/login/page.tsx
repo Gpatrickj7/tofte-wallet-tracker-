@@ -32,6 +32,12 @@ export default async function Login({ searchParams }: { searchParams: Promise<{ 
         <input name="pass" type="password" placeholder="Password" autoComplete="current-password" required />
         <button>Sign in</button>
       </form>
+      {/* Only shown on a phone in a normal browser tab; hidden once installed. */}
+      <div className="install-hint">
+        <p className="text-neutral-300 mb-1">Install it as an app</p>
+        <p className="muted text-xs mb-1"><strong className="text-neutral-400">iPhone or iPad:</strong> tap Share, then <em>Add to Home Screen</em>.</p>
+        <p className="muted text-xs"><strong className="text-neutral-400">Android:</strong> open the browser menu, then <em>Install app</em> or <em>Add to Home screen</em>.</p>
+      </div>
     </div>
   );
 }

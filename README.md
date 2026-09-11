@@ -44,6 +44,7 @@ This is v1, released as-is under the MIT license.
 
 ## Contents
 
+- [On your phone or tablet](#on-your-phone-or-tablet)
 - [What it does](#what-it-does)
 - [What it does not do](#what-it-does-not-do)
 - [Requirements](#requirements)
