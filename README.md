@@ -254,7 +254,7 @@ Airdropped tokens arrive in wallets unsolicited all the time, and some are built
 
 ## Security notes
 
-**This app never asks for a private key or a seed phrase.** If any version of it ever does, it is not this software. Nothing legitimate here needs one, because reading public balances does not require the ability to spend.
+**This app never asks for a private key or a seed phrase.** If any version of it ever does, it is not this software. Nothing legitimate here needs one, because reading public balances does not require the ability to spend. Read-only is the permanent design, not a v1 limitation; see [SECURITY.md](SECURITY.md) for the full policy and how to report a problem, and [CONTRIBUTING.md](CONTRIBUTING.md) for what kinds of changes are welcome.
 
 **Your addresses are public data, but publishing them is still a choice.** Anyone who knows an address can see its full balance and transaction history forever. Putting your addresses in a deployed app is fine; putting them in a public git repository ties them to your name permanently. Keep them in `.env.local` and in your host's environment variables, never in a commit. The `.gitignore` here is set up to prevent that, but it cannot stop a deliberate `git add -f`.
 
