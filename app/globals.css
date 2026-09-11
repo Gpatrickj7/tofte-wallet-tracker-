@@ -111,6 +111,7 @@ button { @apply bg-neutral-100 text-neutral-900 font-medium px-3 py-1.5 rounded-
 
 .badge-purchase { @apply border-sky-800 text-sky-300 bg-sky-950/40; }
 .badge-mining { @apply border-emerald-800 text-emerald-300 bg-emerald-950/40; }
+.badge-swap { @apply border-amber-800 text-amber-300 bg-amber-950/40; }
 
 /* ── Installed app ──────────────────────────────────────────────────────
    When launched from the home screen there is no browser chrome, so the

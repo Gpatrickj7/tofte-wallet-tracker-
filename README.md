@@ -63,7 +63,7 @@ This is v1, released as-is under the MIT license.
 | `/` | Holdings across every configured chain, valued in USD, sorted by value |
 | `/mining` | Mining payout history with the USD price at the moment each payout landed |
 | `/purchases` | A manual log of what you bought, when, and for how much |
-| `/ledger` | Every purchase and payout in one timeline, cost basis against value now, and how the portfolio's composition has changed day by day |
+| `/ledger` | Every purchase, payout, and swap in one timeline, cost basis against value now, realized gains from swaps, and how the portfolio's composition has changed day by day |
 | `/status` | Diagnostics: which chains responded, which failed, and why |
 
 Supported chains: **Ethereum, BNB Chain, Ethereum Classic, Solana, Bitcoin, TRON, Linea, Monad.**
@@ -87,6 +87,8 @@ Balances have no memory: a wallet tells you what you hold now and nothing about 
 - **Every event** in one timeline, with a CSV export.
 
 Value now counts only what the tracked wallets hold. Something bought and left on an exchange shows dollars in with nothing against it, which is the honest answer, not a bug.
+
+**Swaps.** Mined one coin and traded it for another? Log the swap on the ledger page: what you gave up, what you got, and what it was worth in dollars at the time. Basis follows average cost, the way most tax regimes treat a crypto-to-crypto trade: the units given up leave at their average cost, the difference between that and the swap's dollar value is *realized*, and the units received arrive with the swap's value as their basis. A swap is not "dollars in", so it never inflates that number. Swap more than the ledger knows you hold and the basis stops at zero rather than going negative.
 
 The ledger math lives in one dependency-free module, `lib/ledger.ts`, with unit tests that run in plain Node (`npm test`). Snapshots written by v1 have no position detail; they still feed the value line and are simply skipped by the composition chart.
 

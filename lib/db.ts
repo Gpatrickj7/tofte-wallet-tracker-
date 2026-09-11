@@ -52,6 +52,18 @@ export const purchases = {
   insert: async (p: Omit<Purchase, "id">) => { await (await db()).collection("purchases").insertOne(p); },
 };
 
+// A swap: units of one asset out, units of another in, at a dollar value.
+// Logged by hand, like a purchase. The ledger moves basis across it.
+export type Swap = {
+  id: string; date: string; from_asset: string; from_qty: string; to_asset: string; to_qty: string;
+  usd_value: string; fees: string; venue: string; notes: string | null; created_at: number;
+};
+export const swaps = {
+  list: async (): Promise<Swap[]> => (await (await db()).collection("swaps").find().sort({ date: -1, created_at: -1 }).toArray())
+    .map((d) => ({ ...strip<Omit<Swap, "id">>(d), id: String(d._id) })),
+  insert: async (s: Omit<Swap, "id">) => { await (await db()).collection("swaps").insertOne(s); },
+};
+
 // One row per UTC day holding the portfolio's priced total and, since v1.1,
 // each priced position behind it. Written on each holdings load, last write
 // of the day wins. Balances alone have no memory; this is what makes the
