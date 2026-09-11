@@ -1,6 +1,6 @@
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
-import { Nav, TabBar } from "./nav";
+import { Nav, PhoneSignOut, TabBar } from "./nav";
 
 export const metadata: Metadata = {
   title: "Wallet Tracker",
@@ -30,7 +30,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <div className="flex items-center gap-2 font-semibold text-neutral-100 whitespace-nowrap"><span className="inline-block w-2 h-2 rounded-full" style={{ background: "var(--series-1)" }} />Wallet Tracker <span className="muted font-normal hidden sm:inline">· read-only</span></div>
           <Nav />
           {/* The header nav (and its sign-out) hides on phones; keep a way out. */}
-          <a href="/logout" className="sm:hidden text-xs text-neutral-500">Sign out</a>
+          <PhoneSignOut />
         </div>
       </header>
       <main className="max-w-6xl mx-auto px-4 py-6">{children}</main>

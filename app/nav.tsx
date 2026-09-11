@@ -10,9 +10,11 @@ const items: [string, string, string][] = [
   ["/status", "Status", "M12 3a9 9 0 100 18 9 9 0 000-18zM12 8v5M12 16h.01"],
 ];
 
-/** Header links, shown on tablet and desktop. */
+/** Header links, shown on tablet and desktop. Nothing to navigate to
+ *  before signing in, so the login page shows none of this. */
 export function Nav() {
   const p = usePathname();
+  if (p === "/login") return null;
   return (
     <div className="nav flex items-center gap-1">
       {items.map(([href, label]) => <Link key={href} href={href} className={p === href ? "active" : ""}>{label}</Link>)}
@@ -21,11 +23,19 @@ export function Nav() {
   );
 }
 
+/** The phone header has no nav, so it carries its own sign-out link. */
+export function PhoneSignOut() {
+  const p = usePathname();
+  if (p === "/login") return null;
+  return <a href="/logout" className="sm:hidden text-xs text-neutral-500">Sign out</a>;
+}
+
 /** Bottom tab bar, shown on phones. Rendered outside the header on purpose:
  *  the header's backdrop blur would otherwise become this bar's containing
  *  block and pin it to the top of the page instead of the bottom. */
 export function TabBar() {
   const p = usePathname();
+  if (p === "/login") return null;
   return (
     <nav className="tabbar" aria-label="Sections">
       {items.map(([href, label, d]) => (
