@@ -1,0 +1,32 @@
+# The whole thing, including a database, in one command:
+#
+#   docker compose up
+#
+# Then open http://localhost:3000 and sign in with the DASH_USER / DASH_PASS
+# below. Put your wallet addresses in .env.local first (copy .env.example),
+# or set DEMO_MODE=1 to see the dashboard with sample data and no addresses.
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    env_file:
+      - path: .env.local
+        required: false
+    environment:
+      # Change these. They are the login for your dashboard.
+      DASH_USER: ${DASH_USER:-admin}
+      DASH_PASS: ${DASH_PASS:-change-me-before-exposing-this}
+      # Points at the bundled database below. Override to use Atlas instead.
+      MONGODB_URI: ${MONGODB_URI:-mongodb://mongo:27017}
+      MONGODB_DB: ${MONGODB_DB:-wallet_tracker}
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:7
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:

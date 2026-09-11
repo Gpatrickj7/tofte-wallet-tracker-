@@ -1,8 +1,35 @@
 # Wallet Tracker
 
+[![CI](https://github.com/Gpatrickj7/tofte-wallet-tracker-/actions/workflows/ci.yml/badge.svg)](https://github.com/Gpatrickj7/tofte-wallet-tracker-/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Node 22](https://img.shields.io/badge/node-22.x-brightgreen.svg)](package.json)
+
 A read-only dashboard for watching crypto you already own. It shows balances across several chains, logs mining payouts with the USD value at the time they arrived, tracks manual purchases, and exports everything to CSV for tax time.
 
 **It cannot move your money.** There is nowhere to enter a private key or a seed phrase, and no code that signs or sends a transaction. It reads public blockchain data about addresses you give it. That is the entire feature set, and it is deliberate: a tool that only reads is a tool that cannot be tricked into spending.
+
+![Dashboard with allocation, holdings by chain, monthly income and a cumulative line](docs/dashboard.png)
+
+<p align="center">
+  <img src="docs/tooltip.png" alt="Hovering a column shows its value and month" width="70%">
+</p>
+
+Charts are inline SVG with no charting library. Every one has a hover readout, keyboard focus, and a table view. Colors were validated for the dark surface against colour-vision-deficiency and contrast checks, not eyeballed. It works at phone width.
+
+## See it in thirty seconds
+
+No addresses, no database, no signup:
+
+```bash
+git clone https://github.com/Gpatrickj7/tofte-wallet-tracker-.git
+cd tofte-wallet-tracker-
+npm install
+DASH_USER=me DASH_PASS=me DEMO_MODE=1 npm run dev
+```
+
+Sign in at <http://localhost:3000> with `me` / `me`, then open <http://localhost:3000/demo>. That is the dashboard with sample numbers. When you are ready for your own, follow [Setup](#setup) below.
+
+Prefer containers? `docker compose up` gives you the app and a database together. See [Docker](#docker).
 
 This is v1, released as-is under the MIT license.
 
@@ -14,6 +41,7 @@ This is v1, released as-is under the MIT license.
 - [Setup](#setup)
 - [Environment variables](#environment-variables)
 - [Deploying](#deploying)
+- [Docker](#docker)
 - [How it works](#how-it-works)
 - [Troubleshooting](#troubleshooting)
 - [Security notes](#security-notes)
@@ -116,16 +144,28 @@ Linea has no variable of its own; it reads `ETH_ADDRESS`, because it is the same
 
 | Variable | What it is |
 |---|---|
-| `MONGODB_URI` | MongoDB connection string. Needed only for purchases and stored payout history. |
+| `MONGODB_URI` | MongoDB connection string. Needed for purchases, stored payout history, and the portfolio-value-over-time chart. |
 | `MONGODB_DB` | Database name. Defaults to `wallet_tracker`. |
 
-Without `MONGODB_URI` the holdings pages work normally and the pages that need storage will tell you they are unconfigured rather than crashing.
+Without `MONGODB_URI` the holdings pages work normally and the pages that need storage will tell you they are unconfigured rather than crashing. With it, the app records one portfolio-value snapshot per day, and the value-over-time line appears once there are two.
+
+### Demo, optional
+
+| Variable | What it is |
+|---|---|
+| `DEMO_MODE` | Set to `1` to enable `/demo`, a dashboard of sample numbers. Leave unset in production. |
 
 ## Deploying
 
 It is a standard Next.js app and deploys anywhere Next.js runs.
 
-**On Vercel:**
+**On Vercel, one click:**
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FGpatrickj7%2Ftofte-wallet-tracker-&env=DASH_USER,DASH_PASS&envDescription=Login%20for%20your%20dashboard.%20Add%20wallet%20addresses%20afterwards%20under%20Settings%20%E2%86%92%20Environment%20Variables.&project-name=wallet-tracker&repository-name=wallet-tracker)
+
+It asks for `DASH_USER` and `DASH_PASS` up front, since the app refuses every request without them. Add wallet addresses afterwards under **Settings → Environment Variables** and redeploy.
+
+**On Vercel, by hand:**
 
 1. Push your fork to GitHub.
 2. Import the repository in Vercel. It detects Next.js automatically; accept the defaults.
@@ -135,6 +175,21 @@ It is a standard Next.js app and deploys anywhere Next.js runs.
 Set the variables *before* the first deploy, or the build will succeed and every request will be refused for lack of `DASH_USER` and `DASH_PASS`. That is the app working correctly, not an error.
 
 **Anywhere else:** `npm run build` then `npm start`. It needs Node 22.
+
+## Docker
+
+The app and a MongoDB together, in one command:
+
+```bash
+cp .env.example .env.local   # put your addresses in here
+docker compose up
+```
+
+Open <http://localhost:3000>. The default login is `admin` / `change-me-before-exposing-this`; override it by setting `DASH_USER` and `DASH_PASS` in your shell or in `.env.local`. The bundled database persists in a named volume, so your purchase log survives restarts.
+
+To use Atlas instead of the bundled database, set `MONGODB_URI` in `.env.local` and the compose file will pick it up over the default.
+
+The image runs as an unprivileged user and contains only production dependencies.
 
 ## How it works
 
