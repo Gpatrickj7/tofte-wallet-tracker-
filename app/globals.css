@@ -86,6 +86,32 @@ button { @apply bg-neutral-100 text-neutral-900 font-medium px-3 py-1.5 rounded-
 .meter { @apply h-1.5 rounded overflow-hidden mt-2; background: var(--meter-track); }
 .meter-fill { height: 100%; background: var(--series-1); }
 
+/* Stacked areas: a hairline of surface color between bands keeps adjacent
+   hues from bleeding into each other. Fill comes from the slot variable. */
+.chart-band { stroke: var(--chart-surface); stroke-width: 1; transition: opacity 120ms; }
+.chart-bar-2 { fill: var(--series-2); transition: opacity 120ms; }
+.chart-table th.num, .chart-table td.num { @apply text-right; }
+
+/* Signed bars: a center axis, gains to the right in green, losses to the
+   left in red. The printed value carries the sign too, so color is never
+   the only cue. */
+.hbar-track.signed { @apply relative; }
+.hbar-track.signed::after { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: var(--chart-axis); }
+.hbar-track.signed .hbar-fill { position: absolute; top: 0; height: 100%; }
+.hbar-fill.pos { background: var(--series-3); }
+.hbar-fill.neg { background: var(--series-8); border-radius: 4px 0 0 4px; }
+
+/* Range picker above a time series. Plain, not the filled form button. */
+.range-bar { @apply flex flex-wrap items-center justify-between gap-2 mb-3 text-xs; }
+.range-change strong { @apply text-sm; font-variant-numeric: tabular-nums; }
+.range-buttons { @apply flex gap-1; }
+.range-btn { @apply bg-transparent text-neutral-500 border border-neutral-800 px-2.5 py-1 rounded text-xs font-normal hover:bg-neutral-800 hover:text-neutral-200 active:bg-neutral-800; min-height: 28px; }
+.range-btn.active { @apply bg-neutral-800 text-neutral-100 border-neutral-700; }
+.range-btn:disabled { @apply opacity-40 cursor-default hover:bg-transparent hover:text-neutral-500; }
+
+.badge-purchase { @apply border-sky-800 text-sky-300 bg-sky-950/40; }
+.badge-mining { @apply border-emerald-800 text-emerald-300 bg-emerald-950/40; }
+
 /* ── Installed app ──────────────────────────────────────────────────────
    When launched from the home screen there is no browser chrome, so the
    layout extends under the notch and the home indicator. Pad for both. */

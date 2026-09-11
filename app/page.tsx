@@ -2,7 +2,7 @@ import { fetchAllChains } from "@/lib/chains";
 import { spotPrices } from "@/lib/prices";
 import { snapshots } from "@/lib/db";
 import { fmtQty, fmtTs, fmtUsd } from "@/lib/units";
-import { HBars, Line, Stacked } from "@/lib/charts";
+import { HBars, RangeLine, Stacked } from "@/lib/charts";
 import { config } from "@/config";
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -25,7 +25,9 @@ export default async function Holdings({ searchParams }: { searchParams: Promise
 
   // Remember today's total, then read the history back. Both are best-effort:
   // without a database the page simply has no line to draw.
-  if (total > 0 && process.env.MONGODB_URI) await snapshots.record(total);
+  if (total > 0 && process.env.MONGODB_URI) {
+    await snapshots.record(total, counted.filter((r) => r.value != null).map((r) => ({ asset: r.asset, chain: r.chain, qty: r.quantity, price: r.price, value: r.value! })));
+  }
   const history = process.env.MONGODB_URI ? await snapshots.list() : [];
 
   const byChain = new Map<string, number>();
@@ -50,7 +52,7 @@ export default async function Holdings({ searchParams }: { searchParams: Promise
       {history.length >= 2 && (
         <>
           <h2>Portfolio value over time</h2>
-          <div className="card"><Line title="Portfolio value by day" data={history.map((s) => ({ label: s.day.slice(5), sub: s.day, value: s.total }))} /></div>
+          <div className="card"><RangeLine title="Portfolio value by day" data={history.map((s) => ({ day: s.day, value: s.total }))} /><p className="muted text-xs mt-3"><a href="/ledger">Composition over time, cost basis, and every event →</a></p></div>
         </>
       )}
       {history.length === 1 && <p className="muted text-xs mb-4">First snapshot saved. The value-over-time chart appears once there is a second day of data.</p>}

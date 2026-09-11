@@ -20,6 +20,7 @@ function db(): Promise<Db> {
       const d = c.db(process.env.MONGODB_DB || "wallet_tracker");
       await d.collection("payouts").createIndex({ id: 1 }, { unique: true });
       await d.collection("price_cache").createIndex({ key: 1 }, { unique: true });
+      await d.collection("snapshots").createIndex({ day: 1 }, { unique: true });
       return d;
     }).catch((e) => { dbp = null; throw e; });
   }
@@ -51,20 +52,28 @@ export const purchases = {
   insert: async (p: Omit<Purchase, "id">) => { await (await db()).collection("purchases").insertOne(p); },
 };
 
-// One row per UTC day holding the portfolio's priced total. Written on each
-// holdings load, last write of the day wins. This is what makes the value-over-
-// time line possible: balances alone have no memory.
-export type Snapshot = { day: string; ts: number; total: number };
+// One row per UTC day holding the portfolio's priced total and, since v1.1,
+// each priced position behind it. Written on each holdings load, last write
+// of the day wins. Balances alone have no memory; this is what makes the
+// value-over-time and composition charts possible. Rows written by v1 have
+// no positions and are simply skipped by the composition chart.
+export type SnapPosition = { asset: string; chain: string; qty: string; price: number | null; value: number };
+export type Snapshot = { day: string; ts: number; total: number; positions?: SnapPosition[] };
 export const snapshots = {
-  record: async (total: number) => {
+  record: async (total: number, positions: SnapPosition[] = []) => {
     try {
       const d = await db();
-      await d.collection("snapshots").createIndex({ day: 1 }, { unique: true });
-      await d.collection("snapshots").updateOne({ day: new Date().toISOString().slice(0, 10) }, { $set: { ts: Math.floor(Date.now() / 1000), total } }, { upsert: true });
+      await d.collection("snapshots").updateOne(
+        { day: new Date().toISOString().slice(0, 10) },
+        { $set: { ts: Math.floor(Date.now() / 1000), total, positions } },
+        { upsert: true },
+      );
     } catch { /* best-effort: the page must render without storage */ }
   },
+  // The most recent `days` rows, oldest first. Sorted descending first so
+  // the limit trims the far past rather than the recent past.
   list: async (days = 365): Promise<Snapshot[]> => {
-    try { return (await (await db()).collection("snapshots").find().sort({ day: 1 }).limit(days).toArray()).map((d) => strip<Snapshot>(d)); }
+    try { return (await (await db()).collection("snapshots").find().sort({ day: -1 }).limit(days).toArray()).map((d) => strip<Snapshot>(d)).reverse(); }
     catch { return []; }
   },
 };

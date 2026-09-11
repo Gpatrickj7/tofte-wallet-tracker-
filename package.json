@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "test": "node --experimental-strip-types --test \"test/**/*.test.mjs\""
   },
   "dependencies": {
     "@solana/web3.js": "^1.95.0",

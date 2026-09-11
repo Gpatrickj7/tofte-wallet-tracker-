@@ -6,6 +6,7 @@ const items: [string, string, string][] = [
   ["/", "Holdings", "M3 3h18v4H3zM3 10h18v4H3zM3 17h18v4H3z"],
   ["/mining", "Mining", "M12 2l9 5v10l-9 5-9-5V7z"],
   ["/purchases", "Purchases", "M6 6h15l-1.5 9h-12zM6 6L5 3H2M9 20a1 1 0 100-2 1 1 0 000 2zM18 20a1 1 0 100-2 1 1 0 000 2z"],
+  ["/ledger", "Ledger", "M5 3h14v18H5zM9 3v18M12 8h4M12 12h4M12 16h4"],
   ["/status", "Status", "M12 3a9 9 0 100 18 9 9 0 000-18zM12 8v5M12 16h.01"],
 ];
 

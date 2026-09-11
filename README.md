@@ -63,6 +63,7 @@ This is v1, released as-is under the MIT license.
 | `/` | Holdings across every configured chain, valued in USD, sorted by value |
 | `/mining` | Mining payout history with the USD price at the moment each payout landed |
 | `/purchases` | A manual log of what you bought, when, and for how much |
+| `/ledger` | Every purchase and payout in one timeline, cost basis against value now, and how the portfolio's composition has changed day by day |
 | `/status` | Diagnostics: which chains responded, which failed, and why |
 
 Supported chains: **Ethereum, BNB Chain, Ethereum Classic, Solana, Bitcoin, TRON, Linea, Monad.**
@@ -71,7 +72,23 @@ It also discovers ERC-20, SPL and TRC-20 tokens held by your addresses and price
 
 Mining payouts are read from **2miners**. It is the only pool supported in v1.
 
-CSV export is available for both payouts and purchases, at `/api/export/payouts` and `/api/export/purchases`.
+CSV export is available for payouts, purchases, and the combined ledger, at `/api/export/payouts`, `/api/export/purchases`, and `/api/export/ledger`.
+
+### The ledger
+
+![Portfolio composition by asset over 120 days, as stacked areas](docs/composition.png)
+
+Balances have no memory: a wallet tells you what you hold now and nothing about last month. So each time the holdings page loads, the app writes one row for the day: the priced total and every position behind it. From that history, and from the purchase log and payout log, the ledger page draws:
+
+- **Value over time** with a 30-day, 90-day, one-year, or full range, and the change over the range.
+- **Composition over time**: the same total split by asset, day by day, so you can see drift rather than guess at it.
+- **Cost basis beside value now**, per asset, and the unrealized gain or loss on each.
+- **Dollars in by month**, purchased beside mined.
+- **Every event** in one timeline, with a CSV export.
+
+Value now counts only what the tracked wallets hold. Something bought and left on an exchange shows dollars in with nothing against it, which is the honest answer, not a bug.
+
+The ledger math lives in one dependency-free module, `lib/ledger.ts`, with unit tests that run in plain Node (`npm test`). Snapshots written by v1 have no position detail; they still feed the value line and are simply skipped by the composition chart.
 
 ## What it does not do
 
@@ -153,7 +170,7 @@ Linea has no variable of its own; it reads `ETH_ADDRESS`, because it is the same
 
 | Variable | What it is |
 |---|---|
-| `MONGODB_URI` | MongoDB connection string. Needed for purchases, stored payout history, and the portfolio-value-over-time chart. |
+| `MONGODB_URI` | MongoDB connection string. Needed for purchases, stored payout history, the ledger, and the value and composition over time charts. |
 | `MONGODB_DB` | Database name. Defaults to `wallet_tracker`. |
 
 Without `MONGODB_URI` the holdings pages work normally and the pages that need storage will tell you they are unconfigured rather than crashing. With it, the app records one portfolio-value snapshot per day, and the value-over-time line appears once there are two.
@@ -223,8 +240,11 @@ Check `/status`. It lists each chain and whether its provider responded. An addr
 **Balances look stale.**
 They are cached for 60 seconds. Use the Refresh link.
 
-**The purchases or mining page says it is unconfigured.**
-That means `MONGODB_URI` is not set. Those two pages need storage; holdings do not.
+**The purchases, mining, or ledger page says it is unconfigured.**
+That means `MONGODB_URI` is not set. Those pages need storage; holdings do not.
+
+**The ledger has no value-over-time or composition chart.**
+Both need at least two days of snapshots, and a snapshot is written each time the holdings page loads. Open the holdings page today and again tomorrow. Composition also needs snapshots written by this version or later; older rows only carry the total.
 
 **A token shows up that I do not recognise, or one is flagged.**
 Airdropped tokens arrive in wallets unsolicited all the time, and some are built to impersonate a real coin. The app flags the ones it can detect. Treat anything flagged as untrustworthy, and never visit a website named inside a token you did not buy.
