@@ -1,0 +1,87 @@
+@import "tailwindcss";
+html { color-scheme: dark; }
+body { @apply bg-neutral-950 text-neutral-200 text-sm antialiased; font-variant-numeric: tabular-nums; }
+a { @apply text-neutral-300 hover:text-white; }
+.nav a { @apply px-3 py-1.5 rounded-md text-neutral-400 hover:text-white hover:bg-neutral-800; }
+.nav a.active { @apply text-white bg-neutral-800; }
+.card { @apply bg-neutral-900/60 border border-neutral-800 rounded-lg p-4; }
+.tile { @apply bg-neutral-900/60 border border-neutral-800 rounded-lg p-4; }
+.tile .k { @apply text-xs uppercase tracking-wide text-neutral-500 mb-1; }
+.tile .v { @apply text-xl font-semibold text-neutral-100; }
+.tile .s { @apply text-xs text-neutral-500 mt-1; }
+h1 { @apply text-lg font-semibold text-neutral-100; }
+h2 { @apply text-xs uppercase tracking-wide text-neutral-500 font-medium mb-2 mt-6; }
+table { @apply w-full border-collapse text-sm; }
+th { @apply text-left text-xs uppercase tracking-wide text-neutral-500 font-medium border-b border-neutral-800 py-2 px-3; }
+td { @apply border-b border-neutral-800/70 py-2 px-3 align-top; }
+tbody tr:hover td { @apply bg-neutral-900/70; }
+tfoot td { @apply font-semibold text-neutral-100 border-t border-neutral-700 border-b-0; }
+th.num, td.num { @apply text-right; }
+.muted { @apply text-neutral-500; }
+.err { @apply text-red-400; }
+.ok { @apply text-emerald-400; }
+.badge { @apply inline-block text-[10px] uppercase tracking-wide px-1.5 py-0.5 rounded border; }
+.badge-native { @apply border-emerald-800 text-emerald-300 bg-emerald-950/40; }
+.badge-bridged { @apply border-amber-800 text-amber-300 bg-amber-950/40; }
+.badge-wrapped { @apply border-sky-800 text-sky-300 bg-sky-950/40; }
+.badge-token { @apply border-neutral-700 text-neutral-400 bg-neutral-900; }
+input, select { @apply bg-neutral-950 border border-neutral-700 px-2.5 py-1.5 rounded-md text-neutral-100 placeholder:text-neutral-600 focus:outline-none focus:border-neutral-400; }
+label { @apply text-xs text-neutral-500 block mb-1; }
+button { @apply bg-neutral-100 text-neutral-900 font-medium px-3 py-1.5 rounded-md hover:bg-white active:bg-neutral-300; }
+.tablewrap { @apply bg-neutral-900/60 border border-neutral-800 rounded-lg overflow-x-auto; }
+
+/* ── Charts ─────────────────────────────────────────────────────────────
+   Palette validated for this dark surface: every categorical slot clears
+   3:1 contrast, the CVD floor, and the normal-vision floor. Change these
+   in one place; the chart code only refers to the roles. */
+:root {
+  --chart-surface: #171717;
+  --chart-grid: #2c2c2a;
+  --chart-axis: #383835;
+  --chart-tick: #898781;
+  --chart-label: #ffffff;
+  --series-1: #3987e5; --series-2: #d95926; --series-3: #199e70; --series-4: #c98500;
+  --series-5: #d55181; --series-6: #008300; --series-7: #9085e9; --series-8: #e66767;
+  --meter-track: #184f95;
+}
+.chart { @apply m-0; }
+.chart-plot { @apply relative; }
+.chart-grid { stroke: var(--chart-grid); stroke-width: 1; }
+.chart-axis { stroke: var(--chart-axis); stroke-width: 1; }
+.chart-tick { fill: var(--chart-tick); font-size: 10px; font-variant-numeric: tabular-nums; }
+.chart-label { fill: var(--chart-label); font-size: 11px; font-weight: 600; }
+.chart-bar { fill: var(--series-1); transition: opacity 120ms; }
+.chart-line { stroke: var(--series-1); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.chart-area { fill: var(--series-1); opacity: 0.1; }
+.chart-crosshair { stroke: var(--chart-tick); stroke-width: 1; }
+.chart-dot { fill: var(--series-1); }
+.chart-ring { fill: var(--chart-surface); }
+.chart-tip { @apply absolute pointer-events-none rounded-md px-2.5 py-1.5 text-xs whitespace-nowrap; background: #0d0d0d; border: 1px solid rgba(255,255,255,0.10); z-index: 5; }
+.chart-tip strong { @apply block text-neutral-100 text-sm; }
+.chart-tip span { @apply text-neutral-400; }
+.chart-table { @apply mt-3 text-xs; }
+.chart-table summary { @apply cursor-pointer text-neutral-500 hover:text-neutral-300 select-none; }
+.chart-table table { @apply mt-2; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
+
+.hbars { @apply flex flex-col gap-2; }
+.hbar-row { @apply grid items-center gap-3 rounded transition-opacity; grid-template-columns: minmax(64px, 140px) 1fr minmax(96px, auto); }
+.hbar-row:focus { @apply outline-none ring-1 ring-neutral-600; }
+.hbar-label { @apply text-neutral-200 text-xs truncate; }
+.hbar-track { @apply h-3 rounded-sm overflow-hidden; background: var(--chart-grid); }
+.hbar-fill { height: 100%; background: var(--series-1); border-radius: 0 4px 4px 0; }
+.hbar-value { @apply text-right text-xs text-neutral-100; font-variant-numeric: tabular-nums; }
+
+.stacked { @apply flex h-4 rounded-md overflow-hidden; gap: 2px; background: var(--chart-surface); }
+.stacked-seg { min-width: 2px; transition: opacity 120ms; }
+.stacked-seg:focus { @apply outline-none ring-2 ring-white; }
+[data-slot="1"] { background: var(--series-1); } [data-slot="2"] { background: var(--series-2); }
+[data-slot="3"] { background: var(--series-3); } [data-slot="4"] { background: var(--series-4); }
+[data-slot="5"] { background: var(--series-5); } [data-slot="6"] { background: var(--series-6); }
+[data-slot="7"] { background: var(--series-7); } [data-slot="8"] { background: var(--series-8); }
+.legend { @apply flex flex-wrap gap-x-4 gap-y-1 mt-3 text-xs text-neutral-300; }
+.legend li { @apply flex items-center gap-1.5 transition-opacity; }
+.swatch { @apply inline-block w-2.5 h-2.5 rounded-sm; }
+
+.meter { @apply h-1.5 rounded overflow-hidden mt-2; background: var(--meter-track); }
+.meter-fill { height: 100%; background: var(--series-1); }

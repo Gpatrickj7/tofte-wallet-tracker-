@@ -1,0 +1,9 @@
+node_modules
+.next
+tsconfig.tsbuildinfo
+
+# Every env file except the template. .env.local is the one you edit; the
+# others are listed so a stray file can never be committed by accident.
+.env
+.env.*
+!.env.example
