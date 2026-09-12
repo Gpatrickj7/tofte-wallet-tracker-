@@ -67,7 +67,9 @@ This is v1, released as-is under the MIT license.
 | `/ledger` | Every purchase, payout, and swap in one timeline, cost basis against value now, realized gains from swaps, and how the portfolio's composition has changed day by day |
 | `/status` | Diagnostics: which chains responded, which failed, and why |
 
-Supported chains: **Ethereum, BNB Chain, Ethereum Classic, Solana, Bitcoin, TRON, Linea, Monad.**
+Supported chains: **Ethereum, Ethereum Classic, BNB Chain, Solana, Bitcoin, TRON**, plus the EVM chains that share your Ethereum address — **Linea, Polygon, Arbitrum, Optimism, Base, Gnosis, zkSync Era, Scroll, Celo, Metis, Mode, Zora, Immutable zkEVM, Lisk, Unichain, Ink, Soneium, Taiko, World Chain and Blast.**
+
+ETH held on a rollup is shown as its own row (`ETH (Base)`, `ETH (Arbitrum)`) rather than folded into one Ethereum total, because it is the same asset in a different place and summing them hides where your money actually is.
 
 It also discovers ERC-20, SPL and TRC-20 tokens held by your addresses and prices them by contract, and it flags two things worth flagging: tokens impersonating a native coin, and airdropped tokens with no real price. Those are the two most common ways a wallet display gets manipulated into showing a number that is not real.
 
@@ -152,7 +154,7 @@ If either is unset the app refuses every request. That is intentional and there 
 
 | Variable | Chain |
 |---|---|
-| `ETH_ADDRESS` | Ethereum, and Linea |
+| `ETH_ADDRESS` | Ethereum and every other EVM chain listed above |
 | `BSC_ADDRESS` | BNB Chain |
 | `ETC_ADDRESS` | Ethereum Classic |
 | `SOL_ADDRESS` | Solana |
@@ -160,7 +162,17 @@ If either is unset the app refuses every request. That is intentional and there 
 | `TRX_ADDRESS` | TRON |
 | `BSC_TOKENS` | Extra BEP-20 contract addresses, comma-separated, for tokens not found automatically |
 
-Linea has no variable of its own; it reads `ETH_ADDRESS`, because it is the same address format and usually the same wallet.
+The EVM chains have no variables of their own; they all read `ETH_ADDRESS`, because an EVM address is the same address everywhere. Set it once and every one of them is checked. A chain you hold nothing on simply contributes no rows.
+
+### Explorer overrides, all optional
+
+Balances and token discovery come from a block explorer where one exists, and fall back to a plain RPC call when it does not. A published explorer URL can move, or go behind an API key, and this project has no way to verify one from a build machine. So any chain's explorer can be replaced without a code change:
+
+| Variable | Effect |
+| --- | --- |
+| `EXPLORER_<CHAIN>` | Replaces that chain's explorer. The key is the one in `lib/chains/index.ts` — `EXPLORER_ZORA`, `EXPLORER_TAIKO`, `EXPLORER_BASE`. Accepts a host or a full `/api` base. |
+
+A chain with no reachable explorer still reports its native balance over RPC. It just cannot discover tokens, and `/status` says so. That is a smaller failure than reporting a number that is wrong.
 
 ### Mining, optional
 
