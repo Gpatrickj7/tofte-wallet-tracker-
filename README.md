@@ -33,14 +33,53 @@ Prefer containers? `docker compose up` gives you the app and a database together
 
 ## On your phone or tablet
 
-It installs like an app. Once it is deployed, open it in your phone's browser and:
+It installs to your home screen and runs like a native app. There is no App Store listing and nothing to download: it is a progressive web app, so the browser does the installing.
 
-- **iPhone or iPad:** Share → **Add to Home Screen**.
-- **Android:** the browser menu → **Install app** (or **Add to Home screen**).
+![The tracker on a phone, with the bottom tab bar](docs/mobile.png)
 
-It then opens full-screen with its own icon, no browser bar. On a phone the navigation moves to a bottom tab bar and tables show their most important columns; everything else is still in the table views under each chart and in the CSV exports. Tablets get the full layout.
+### Before you start
 
-This is v1, released as-is under the MIT license.
+**It has to be deployed over HTTPS first.** This is the step people miss. A browser will not offer to install a site served from `localhost` or over plain HTTP, so `npm run dev` on your laptop cannot be installed onto a phone. Deploy it (see [Deploying](#deploying), the Vercel button takes about two minutes) and open the deployed address on the phone.
+
+### iPhone and iPad
+
+1. Open the deployed address in **Safari**. This only works in Safari; other iOS browsers will not offer it.
+2. Tap the **Share** button, the square with the arrow pointing up.
+3. Scroll down the share sheet and tap **Add to Home Screen**.
+4. Name it, or keep the suggested name, and tap **Add**.
+
+### Android
+
+1. Open the deployed address in **Chrome**.
+2. Either tap **Install app** in the banner Chrome offers, or open the **⋮** menu and tap **Install app** (older versions say **Add to Home screen**).
+3. Confirm.
+
+### What you get
+
+It opens full screen with its own icon and no browser bar, and it appears in the app switcher like anything else. The layout underneath changes too:
+
+- Navigation moves to a **bottom tab bar** with the four pages, positioned where your thumb already is.
+- Tables show their **most important columns** so nothing needs sideways scrolling. Every hidden value is still in the table view under each chart and in the CSV exports, so nothing is lost, only tucked away.
+- The layout pads around the **notch and the home indicator**, so no content hides behind either.
+- Inputs use a 16 pixel font, which is the size that stops iOS zooming the page every time you tap a field.
+- **Sign out** sits in the top right, since the header links are hidden on a phone.
+
+Tablets keep the full desktop layout with slightly tighter type.
+
+### If it will not install
+
+- **No "Add to Home Screen" option, or it adds a plain bookmark.** You are almost certainly on `http://` or `localhost`. It must be `https://`.
+- **You are in a private or incognito window.** Installing is disabled there. Use a normal window.
+- **On iOS you are not in Safari.** Other browsers on iOS cannot install web apps.
+- **Nothing happens at all.** Open `/manifest.webmanifest` on the deployed address. It should return JSON, not redirect you to the login page. The manifest and the icons are deliberately exempt from the login check, because the browser fetches them without your session when installing, and a manifest that redirects to a login page is a manifest that cannot install.
+
+### Notes
+
+It needs a network connection. There is no offline mode: it shows live balances, and a cached balance is a wrong balance.
+
+Your login is a cookie, so it survives closing the app and lasts thirty days.
+
+Released as-is under the MIT license.
 
 ## Contents
 
