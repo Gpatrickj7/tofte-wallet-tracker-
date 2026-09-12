@@ -16,9 +16,43 @@ A read-only dashboard for watching crypto you already own. It shows balances acr
 
 Charts are inline SVG with no charting library. Every one has a hover readout, keyboard focus, and a table view. Colors were validated for the dark surface against colour-vision-deficiency and contrast checks, not eyeballed. It works at phone width.
 
+## Just want it on your phone? Start here
+
+**You cannot run this from your phone, and downloading the ZIP will not help.** That is not a limitation of this app, it is true of every web app. Something on the internet has to run it, and then your phone opens that address. So the first step is putting it online, which takes about two minutes and costs nothing.
+
+You can do all of this on the phone itself.
+
+**1. Tap this button.**
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FGpatrickj7%2Ftofte-wallet-tracker-&env=DASH_USER,DASH_PASS,DEMO_MODE&envDescription=DASH_USER%20and%20DASH_PASS%20are%20the%20login%20you%20are%20inventing%20right%20now.%20Set%20DEMO_MODE%20to%201%20to%20see%20sample%20data%20first.&project-name=wallet-tracker&repository-name=wallet-tracker)
+
+**2. Sign in with GitHub.** Vercel will make you a free account and copy this project into your own GitHub. You are not signing into anything of ours. We never see it.
+
+**3. It asks for three things.** Make them up, there is nothing to look up:
+
+| It asks for | Type |
+|---|---|
+| `DASH_USER` | any username you want, for example `me` |
+| `DASH_PASS` | any password you want, and make it a long one |
+| `DEMO_MODE` | `1` |
+
+`DEMO_MODE` set to `1` fills the app with realistic sample numbers so you can see what it looks like before you give it anything real. Turn it off later.
+
+**4. Wait for it to build,** about two minutes, then tap the address it gives you. It looks like `wallet-tracker-something.vercel.app`.
+
+**5. Sign in** with the username and password you just invented.
+
+**6. Add it to your home screen** so it opens like a real app. [Instructions here](#on-your-phone-or-tablet), and it is three taps.
+
+That is it. You now have the app running on your phone, on your own account, with sample data.
+
+**When you want your own numbers:** in Vercel, open your project, go to **Settings → Environment Variables**, add `ETH_ADDRESS` (or any of the others in [Environment variables](#environment-variables)) set to your public receiving address, delete `DEMO_MODE`, and redeploy. Public receiving addresses only. This app has no field for a private key or seed phrase and never will.
+
+---
+
 ## See it in thirty seconds
 
-No addresses, no database, no signup:
+If you have a computer and know your way around a terminal. No addresses, no database, no signup:
 
 ```bash
 git clone https://github.com/Gpatrickj7/tofte-wallet-tracker-.git
@@ -83,6 +117,7 @@ Released as-is under the MIT license.
 
 ## Contents
 
+- [Just want it on your phone? Start here](#just-want-it-on-your-phone-start-here)
 - [On your phone or tablet](#on-your-phone-or-tablet)
 - [What it does](#what-it-does)
 - [What it does not do](#what-it-does-not-do)

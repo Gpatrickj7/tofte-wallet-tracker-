@@ -4,6 +4,7 @@ import { snapshots } from "@/lib/db";
 import { fmtQty, fmtTs, fmtUsd } from "@/lib/units";
 import { HBars, RangeLine, Stacked } from "@/lib/charts";
 import { config } from "@/config";
+import Sample from "./sample";
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
@@ -11,7 +12,11 @@ const configured = Object.values(config.wallets).some(Boolean);
 
 export default async function Holdings({ searchParams }: { searchParams: Promise<{ fresh?: string }> }) {
   const { fresh } = await searchParams;
-  if (!configured) return <EmptyState />;
+  // A fresh deployment has no addresses yet. Showing "nothing to show yet"
+  // makes a correct install look broken, so show the sample dashboard with a
+  // banner explaining what it is and how to point it at real wallets. Nothing
+  // is fetched and nothing is stored until an address exists.
+  if (!configured) return <Sample welcome />;
   const chains = await fetchAllChains(fresh === "1");
   const positions = chains.flatMap((c) => c.positions);
   const { prices, asOf, error } = await spotPrices(positions.map((p) => p.priceSymbol));
@@ -83,21 +88,5 @@ export default async function Holdings({ searchParams }: { searchParams: Promise
       ))}</tbody>
       <tfoot><tr><td colSpan={3} className="sm-hide">Total</td><td colSpan={2} className="sm-only-total">Total</td><td className="num">{fmtUsd(total)}</td><td className="sm-hide" /></tr></tfoot></table></div>
     </>
-  );
-}
-
-/** What a fresh install sees. Tells the reader exactly what to do, in order. */
-function EmptyState() {
-  return (
-    <div className="max-w-lg mx-auto mt-10 card">
-      <h1 className="mb-2">Nothing to show yet</h1>
-      <p className="muted mb-4">The app is running and you are signed in. It just has no wallet addresses to watch.</p>
-      <ol className="list-decimal pl-5 space-y-2 text-neutral-300">
-        <li>Open <code className="text-neutral-100">.env.local</code> (locally) or your host&apos;s environment variables (deployed).</li>
-        <li>Add at least one public receiving address, for example <code className="text-neutral-100">ETH_ADDRESS=0x…</code>. Receiving addresses only, never a private key or seed phrase.</li>
-        <li>Restart the dev server, or redeploy.</li>
-      </ol>
-      <p className="muted mt-4 text-xs">Every chain is optional. Leave an address blank and that chain is skipped. See the README for the full list.</p>
-    </div>
   );
 }
